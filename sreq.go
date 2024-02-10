@@ -29,11 +29,12 @@ func NewRequest(ctx context.Context, method string, url string, body any) (*http
 
 // Unmarshal unmarshals the response body into a new instance of T
 func Unmarshal[T any](r *http.Response) (*T, error) {
+	defer func() { _ = r.Body.Close() }()
 	var payload T
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		return nil, fmt.Errorf("unmarshal response for [%s %s]: %w", r.Request.Method, r.Request.URL.String(), err)
 	}
-	return &payload, r.Body.Close()
+	return &payload, nil
 }
 
 // U creates a new url.URL with the given path appended to the base url
