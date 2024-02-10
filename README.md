@@ -49,6 +49,26 @@ err := sreq.Unmarshal(resp, &body)
 u, err := sreq.U("https://example.com/api", "/user/create")
 ```
 
+### Errors
+
+`sreq` also provides custom errors.
+You can:
+- Create a new error using NewErrorName(...)
+- Check if an error is of a specific type using IsErrorName(...)
+
+#### WrongStatusError
+This error type includes the response body, response status code, request URL, and request method.
+
+```go
+if req.StatusCode != http.StatusOK {
+    return sreq.NewWrongStatusError(req)
+}
+```
+The output will be:
+```
+wrong status code for [GET https://example.com]; Code: [405] with reponse [Method Not Allowed, Use POST instead]
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
