@@ -37,7 +37,7 @@ func Unmarshal[T any](r *http.Response) (*T, error) {
 }
 
 // U creates a new url.URL with the given path appended to the base url
-// Example: U("https://test.localhost/api", "/user/create") -> "https://test.localhost/api/user/create"
+// Example: U("https://example.com/api", "/user/create") -> "https://example.com/api/user/create"
 func U(base, path string) (*url.URL, error) {
 	u, err := url.Parse(fmt.Sprintf("%s/%s", base, strings.TrimPrefix(path, "/")))
 	if err != nil {
