@@ -7,7 +7,7 @@
 To install `sreq`, use the following command:
 
 ```bash
-go get github.com/MrBanja/sreq
+go get github.com/mrbanja/sreq
 ```
 
 ## Usage
