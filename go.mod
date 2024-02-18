@@ -1,3 +1,3 @@
-module github.com/mrbanja/sreq/v2
+module github.com/mrbanja/snet/v2
 
 go 1.21.1

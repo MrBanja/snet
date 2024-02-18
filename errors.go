@@ -1,4 +1,4 @@
-package sreq
+package snet
 
 import (
 	"errors"

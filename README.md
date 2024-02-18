@@ -1,18 +1,18 @@
-# sreq
+# snet
 
-`sreq` is a simple Go library that provides helper functions for the `net/http` package. It simplifies the process of creating HTTP requests, unmarshalling HTTP responses, and constructing URLs.
+`snet` is a simple Go library that provides helper functions for the `net/http` package. It simplifies the process of creating HTTP requests, (un)marshalling, constructing URLs, and gracefully shutting down servers.
 
 ## Installation
 
-To install `sreq`, use the following command:
+To install `snet`, use the following command:
 
 ```bash
-go get github.com/mrbanja/sreq
+go get github.com/mrbanja/snet/v2
 ```
 
 ## Usage
 
-Here's a brief overview of the functions provided by `sreq`:
+Here's a brief overview of the functions provided by `snet`:
 
 ### NewRequest
 
@@ -24,10 +24,10 @@ type User struct {
     Age int `json:"age"`
 }
 var body = &User{Name: "John", Age: 30}
-req, err := sreq.NewRequest(context.TODO(), "GET", "https://example.com", body)
+req, err := snet.NewRequest(context.TODO(), "POST", "https://example.com", body)
 ```
 
-### Unmarshal
+### UnmarshalResp (UnmarshalRequest, Unmarshal)
 
 `Unmarshal` unmarshals the response body into a new instance of the provided type.
 
@@ -36,9 +36,7 @@ type User struct {
     Name string `json:"name"`
     Age int `json:"age"`
 }
-
-var body User
-err := sreq.Unmarshal(resp, &body)
+user, err := sreq.UnmarshalResp[User](resp)
 ```
 
 ### U
@@ -46,22 +44,29 @@ err := sreq.Unmarshal(resp, &body)
 `U` creates a new url.URL instance with the given path appended to the base URL.
 
 ```go
-u, err := sreq.U("https://example.com/api", "/user/create")
+u, err := snet.U("https://example.com/api", "/user/create")
+```
+
+### ListerAndServe
+
+`ListerAndServe` starts the server and listens for signals to shut down the server.
+
+```go
+err := snet.ListerAndServe(ctx, server, logger, os.Interrupt)
 ```
 
 ### Errors
 
-`sreq` also provides custom errors.
-You can:
-- Create a new error using NewErrorName(...)
-- Check if an error is of a specific type using IsErrorName(...)
+`snet` also provides custom errors. You can:
+- Create a new error using `NewWrongStatusError(...)`
+- Check if an error is of a specific type using `IsWrongStatusError(...)`
 
 #### WrongStatusError
 This error type includes the response body, response status code, request URL, and request method.
 
 ```go
 if req.StatusCode != http.StatusOK {
-    return sreq.NewWrongStatusError(req)
+    return snet.NewWrongStatusError(req)
 }
 ```
 The output will be:
@@ -75,4 +80,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-`sreq` is released under the MIT License.
+`snet` is released under the MIT License.
