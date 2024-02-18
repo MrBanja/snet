@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -27,12 +28,31 @@ func NewRequest(ctx context.Context, method string, url string, body any) (*http
 	return req, nil
 }
 
-// Unmarshal unmarshals the response body into a new instance of T
-func Unmarshal[T any](r *http.Response) (*T, error) {
+// UnmarshalResp unmarshalls the response body into a new instance of T
+func UnmarshalResp[T any](r *http.Response) (*T, error) {
 	defer func() { _ = r.Body.Close() }()
-	var payload T
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+	payload, err := Unmarshal[T](r.Body)
+	if err != nil {
 		return nil, fmt.Errorf("unmarshal response for [%s %s]: %w", r.Request.Method, r.Request.URL.String(), err)
+	}
+	return payload, nil
+}
+
+// UnmarshalReq unmarshalls the request body into a new instance of T
+func UnmarshalReq[T any](r *http.Request) (*T, error) {
+	defer func() { _ = r.Body.Close() }()
+	payload, err := Unmarshal[T](r.Body)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshal request for [%s %s]: %w", r.Method, r.URL.String(), err)
+	}
+	return payload, nil
+}
+
+// Unmarshal unmarshalls io.Reader into a new instance of T
+func Unmarshal[T any](r io.Reader) (*T, error) {
+	var payload T
+	if err := json.NewDecoder(r).Decode(&payload); err != nil {
+		return nil, err
 	}
 	return &payload, nil
 }
