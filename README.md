@@ -47,12 +47,12 @@ user, err := sreq.UnmarshalResp[User](resp)
 u, err := snet.U("https://example.com/api", "/user/create")
 ```
 
-### ListerAndServe
+### ListenAndServe
 
-`ListerAndServe` starts the server and listens for signals to shut down the server.
+`ListenAndServe` starts the server and listens for signals to shut down the server.
 
 ```go
-err := snet.ListerAndServe(ctx, server, logger, os.Interrupt)
+err := snet.ListenAndServe(ctx, server, logger, os.Interrupt)
 ```
 
 ### Errors

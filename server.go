@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-// ListerAndServe starts the server and listens for signals to shut down the server.
-func ListerAndServe(
+// ListenAndServe starts the server and listens for signals to shut down the server.
+func ListenAndServe(
 	ctx context.Context,
 	server *http.Server,
 	logger *slog.Logger,
